@@ -26,14 +26,10 @@ function Chat() {
     const [flag, setFlag] = useState(false)
     
     
-    
-
-
     useEffect(() => {
-
         const roomVal = sessionStorage.getItem("ROOM")
         const userVal = sessionStorage.getItem("USER")
-        if(userVal===null || roomVal===null) {
+        if(!userVal || !roomVal) {
             setFlag(true)
             return;
         }
@@ -41,11 +37,18 @@ function Chat() {
         setRoom(roomVal)
         setButtonTxt(`Room ID:${roomVal}`)
         setUsername(userVal)
+
         const msg = sessionStorage.getItem("MESSAGES")
         setMessages(msg==null?[]:JSON.parse(msg))
+    }, [])
+
+
+    useEffect(() => {
+
+        
+        if(!room || !username)return;
 
         socketRef.current = io("https://ujjwalcheck-bxdheaa4b3beg5ed.centralindia-01.azurewebsites.net/")
-        if(roomVal==="" || userVal==="")return;
         socketRef.current.on("connect", () => {
             console.log("connected")
             socketRef.current?.emit("join-room", {
@@ -84,7 +87,7 @@ function Chat() {
             deleteRequest()
         }
 
-    }, [])
+    }, [room, username])
     
     useEffect(() => {
         const handleUnload = () => {
