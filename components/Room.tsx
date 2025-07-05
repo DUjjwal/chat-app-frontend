@@ -23,8 +23,7 @@ function User() {
             navigate("/user")
         }, 2000)
         return (
-            <div className="text-center">Please enter username first Redirecting to main page</div>
-            
+            <div className="text-center">Please enter username first Redirecting to main page</div>            
         )
     }
     return (
@@ -74,6 +73,8 @@ function User() {
                     });
                 }
                 else {
+                    sessionStorage.setItem("ROOM", room ?? "")
+                        sessionStorage.removeItem("MESSAGE")
                     navigate("/chat")
                 }
             }}>JOIN</button>
