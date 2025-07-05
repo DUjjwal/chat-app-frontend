@@ -139,7 +139,7 @@ function Chat() {
             </div>  
             <div className="h-[10%] outline outline-blue-900 rounded-xl shadow flex w-[100%]">
                 <input type="text" placeholder="Type a message" className='text-base md:text-lg xl:text-xl outline-gray-500 rounded-xl w-[100%] active:outline outline-white p-2' onChange={(e) => setText(e.target.value)} onKeyDown={(e) => {
-                    if(e.key === "Enter") {
+                    if(e.key === "Enter" && text!=null) {
                         socketRef.current?.emit("room-message", {
                             userName: username,
                             roomID: room,
@@ -149,6 +149,7 @@ function Chat() {
                     }
                 }} value={text}/>
                 <button className="flex justify-center items-center text-sm md:text-xl xl:text-xl w-[10%] bg-blue-500 rounded-r-xl text-white p-2 flex justify-center" onClick={() => {
+                    if(text==null)return;
                     socketRef.current?.emit("room-message", {
                         userName: username,
                         roomID: room,
