@@ -30,19 +30,22 @@ function Chat() {
 
 
     useEffect(() => {
-        if(sessionStorage.getItem("ROOM")===null || sessionStorage.getItem("USER")===null) {
+
+        const roomVal = sessionStorage.getItem("ROOM")
+        const userVal = sessionStorage.getItem("USER")
+        if(userVal===null || roomVal===null) {
             setFlag(true)
             return;
         }
 
-        setRoom(sessionStorage.getItem("ROOM"))
-        setButtonTxt(`Room ID:${sessionStorage.getItem("ROOM")}`)
-        setUsername(sessionStorage.getItem("USER"))
+        setRoom(roomVal)
+        setButtonTxt(`Room ID:${roomVal}`)
+        setUsername(userVal)
         const msg = sessionStorage.getItem("MESSAGES")
         setMessages(msg==null?[]:JSON.parse(msg))
 
         socketRef.current = io("https://ujjwalcheck-bxdheaa4b3beg5ed.centralindia-01.azurewebsites.net/")
-        if(!room || !username)return;
+        if(roomVal==="" || userVal==="")return;
         socketRef.current.on("connect", () => {
             console.log("connected")
             socketRef.current?.emit("join-room", {
@@ -51,7 +54,7 @@ function Chat() {
             })
         })
 
-        socketRef.current.on(room, (msg: {
+        socketRef.current.on(room ?? "", (msg: {
             userName: string,
             roomID: string,
             alert: boolean,
