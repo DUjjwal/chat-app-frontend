@@ -58,7 +58,7 @@ function Chat() {
             text: string,
             date: string
         }) => {
-            msg.date = JSON.stringify(new Date().toLocaleString('en-US',{hour: '2-digit', minute:'2-digit'}))
+            msg.date = new Date().toLocaleString('en-US',{hour: '2-digit', minute:'2-digit'})
             setMessages(prev => {
                 const updatedMessages = [...(prev ?? []), msg]
                 sessionStorage.setItem("MESSAGES", JSON.stringify(updatedMessages))
