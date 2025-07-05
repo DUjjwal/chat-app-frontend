@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { messageAtom, roomAtom, usernameAtom } from "../atoms/atoms";
-import { DefaultEventsMap } from "socket.io/dist/typed-events";
+import type { DefaultEventsMap } from "@socket.io/component-emitter";
+
 import { io, Socket } from "socket.io-client";
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
@@ -50,10 +51,16 @@ function Chat() {
             })
         })
 
-        socketRef.current.on(room, (msg) => {
+        socketRef.current.on(room, (msg: {
+            userName: string,
+            roomID: string,
+            alert: boolean,
+            text: string,
+            date: string
+        }) => {
             console.log(msg)
             setMessages(prev => {
-                const updatedMessages = [...prev, msg]
+                const updatedMessages = [...(prev ?? []), msg]
                 sessionStorage.setItem("MESSAGES", JSON.stringify(updatedMessages))
                 return updatedMessages
             })
@@ -78,7 +85,7 @@ function Chat() {
     
     useEffect(() => {
         const handleUnload = () => {
-            socketRef.current?.off(room, () => {})
+            socketRef.current?.off(room ?? "", () => {})
             fetch("https://ujjwalcheck-bxdheaa4b3beg5ed.centralindia-01.azurewebsites.net/delete", {
                 method: "DELETE",
                 headers: {
@@ -118,12 +125,12 @@ function Chat() {
         <>
         <div className="sm:mt-4 h-full flex flex-col gap-y-2 w-full items-center pb-5">
             <button className="text-xs w-auto sm:text-base md:text-lg lg:text-xl px-2 py-1 rounded-lg flex justify-center items-center sm:fixed sm:top-1 sm:left-1 mb-3 text-gray-500 shadow " onMouseEnter={() => setButtonTxt("Copy")} onMouseLeave={() => setButtonTxt(`Room ID:${room}`)} onClick={() => {
-                navigator.clipboard.writeText(room)
+                navigator.clipboard.writeText(room ?? "")
                 setButtonTxt("Copied")
             }}>{buttonTxt}</button>
             <div className="scroll-smooth w-[100%] h-[90%] text-xl overflow-y-scroll flex flex-col gap-y-2" ref={ref}>
-                {messages.map((msg) => (
-                    <Message title={msg.text} user={msg.userName} alert={msg.alert} myuser={username} date={msg.date} />
+                {messages?.map((msg) => (
+                    <Message title={msg.text} user={msg.userName} alert={msg.alert} myuser={username ?? ""} date={msg.date} />
                 ))}
                 {/* <Message title="hello" user="abc" alert="true" myuser={username}/>
                 <Message title="helloawd awda wd awda wd awd a" user="abc" myuser="abc" date="12:44"/>

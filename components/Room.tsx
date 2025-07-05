@@ -49,7 +49,7 @@ function User() {
                         });
                     }
                     else {
-                        sessionStorage.setItem("ROOM", room)
+                        sessionStorage.setItem("ROOM", room ?? "")
                         sessionStorage.removeItem("MESSAGE")
                         navigate("/chat")
                     }

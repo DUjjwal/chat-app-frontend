@@ -34,7 +34,7 @@ function User() {
                         setUsername("");
                     }
                     else {
-                        sessionStorage.setItem("USER", username)
+                        sessionStorage.setItem("USER", username ?? "")
                         sessionStorage.removeItem("ROOM")
                         sessionStorage.removeItem("MESSAGES")
                         navigate("/button")
@@ -62,7 +62,7 @@ function User() {
                 }
                 else {
                     
-                    sessionStorage.setItem("USER", username)
+                    sessionStorage.setItem("USER", username ?? "")
                     sessionStorage.removeItem("ROOM")
                     sessionStorage.removeItem("MESSAGES")
                     navigate("/button")
